@@ -1,3 +1,15 @@
 {
-    "python.pythonPath": "C:\\Users\\yaroslavtsevns.POLYUS\\PycharmProjects\\WebHelper\\env\\Scripts\\python"
+    "python.pythonPath": "C:\\PythonProjects\\WebHelper\\env\\Scripts\\python",
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "self_db",
+            "database": "${workspaceFolder:WebHelper}/monitoringweb/db.sqlite3"
+        }
+    ],
+    "sqltools.useNodeRuntime": true,
+    "python.testing.pytestArgs": [
+        "monitoringweb"
+    ]
 }
