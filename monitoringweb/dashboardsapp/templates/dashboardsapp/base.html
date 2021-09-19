@@ -33,4 +33,62 @@
   <link href="{% static 'monitoringweb/build/css/custom.min.css' %}" rel="stylesheet">
 </head>
 
-{% %}
+<body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        {% include "dashboardsapp/includes/inc_left_col.html" %}
+        {% include "dashboardsapp/includes/inc_top_navigation.html" %}
+        {% block content %}
+          <h1>Место для контента</h1>
+        {% endblock content %}
+        {% include "dashboardsapp/includes/inc_footer_content.html" %}
+        </div>
+    </div>
+
+    {% block js %}
+      
+    {% endblock js %}
+  <!-- jQuery -->
+  <script src="{% static 'monitoringweb/vendors/jquery/dist/jquery.min.js' %}"></script>
+  <!-- Bootstrap -->
+  <script src="{% static 'monitoringweb/vendors/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- FastClick -->
+  <script src="{% static 'monitoringweb/vendors/fastclick/lib/fastclick.js' %}"></script>
+  <!-- NProgress -->
+  <script src="{% static 'monitoringweb/vendors/nprogress/nprogress.js' %}"></script>
+  <!-- Chart.js -->
+  <script src="{% static 'monitoringweb/vendors/Chart.js/dist/Chart.min.js' %}"></script>
+  <!-- gauge.js -->
+  <script src="{% static 'monitoringweb/vendors/gauge.js/dist/gauge.min.js' %}"></script>
+  <!-- bootstrap-progressbar -->
+  <script src="{% static 'monitoringweb/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js' %}"></script>
+  <!-- iCheck -->
+  <script src="{% static 'monitoringweb/vendors/iCheck/icheck.min.js' %}"></script>
+  <!-- Skycons -->
+  <script src="{% static 'monitoringweb/vendors/skycons/skycons.js' %}"></script>
+  <!-- Flot -->
+  <script src="{% static 'monitoringweb/vendors/Flot/jquery.flot.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/Flot/jquery.flot.pie.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/Flot/jquery.flot.time.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/Flot/jquery.flot.stack.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/Flot/jquery.flot.resize.js' %}"></script>
+  <!-- Flot plugins -->
+  <script src="{% static 'monitoringweb/vendors/flot.orderbars/js/jquery.flot.orderBars.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/flot-spline/js/jquery.flot.spline.min.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/flot.curvedlines/curvedLines.js' %}"></script>
+  <!-- DateJS -->
+  <script src="{% static 'monitoringweb/vendors/DateJS/build/date.js' %}"></script>
+  <!-- JQVMap -->
+  <script src="{% static 'monitoringweb/vendors/jqvmap/dist/jquery.vmap.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script>
+  <!-- bootstrap-daterangepicker -->
+  <script src="{% static 'monitoringweb/vendors/moment/min/moment.min.js' %}"></script>
+  <script src="{% static 'monitoringweb/vendors/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+
+  <!-- Custom Theme Scripts -->
+  <script src="{% static 'monitoringweb/build/js/custom.min.js' %}"></script>
+
+</body>
+
+</html>
