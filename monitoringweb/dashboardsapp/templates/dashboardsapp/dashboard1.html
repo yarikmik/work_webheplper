@@ -1,6 +1,7 @@
 {% extends 'dashboardsapp/base.html' %}
 {% load static %}
 {% block content %}
+{% load timetags %}
 <!-- page content -->
 <div class="right_col" role="main">
 
@@ -40,9 +41,13 @@
                     <a>Алерт</a>
                   </h2>
                   <div class="byline">
-                    <span>13 hours ago</span> by <a>Jane Smith</a>
+                    <span>{{ alert.lastEvent.clock|print_timestamp }}</span>
                   </div>
-                  <p class="excerpt">Текст алерта : {{alert}}
+                  <p class="excerpt">{{alert.hosts.0.name}}: <br> {{alert.description}} <br>
+                    {% if alert.comments %}
+                    Комментарий: {{alert.comments}}
+                    {% endif %}
+
                   </p>
                 </div>
               </div>
