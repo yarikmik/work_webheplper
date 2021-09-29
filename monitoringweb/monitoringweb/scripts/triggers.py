@@ -1,20 +1,6 @@
-from typing import Any
-from django.conf import settings
-from pyzabbix import ZabbixAPI
+from monitoringweb.scripts.zabbix_connection import zabbix_connect
 import os
 import sys
-
-
-def zabbix_connect():
-    # Подключение к zabbixAPI
-    z = ZabbixAPI(settings.ZABBIX_SERVER,
-                  user=settings.ZABBIX_USER,
-                  password=settings.ZABBIX_PASSWORD)
-    # zapi.login(settings.ZABBIX_USER, settings.ZABBIX_PASSWORD)
-    answer = z.do_request('apiinfo.version')
-    print('Version:', answer['result'])
-    return z
-
 
 def get_zabbix_trigger_in_problem_test():
     zapi = zabbix_connect()
@@ -36,7 +22,7 @@ def get_zabbix_trigger_in_problem_test():
         filter={'value': 1, 'status': 0},
         sortfield='lastchange',
         sortorder='DESC',
-        limit=1,
+        limit=10,
     )
     filtering_trigger = []
     for trigger in triggers:
@@ -57,6 +43,7 @@ def get_zabbix_trigger_in_problem():
         selectHosts=['name'],
         selectItems=['status'],
         active=True,
+        maintenance = False,
         withLastEventUnacknowledged=True,
         skipDependent=True,
         expandComment=True,

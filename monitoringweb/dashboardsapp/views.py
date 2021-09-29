@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from monitoringweb.scripts import get_zabbix_trigger_in_problem
+from monitoringweb.scripts.triggers import get_zabbix_trigger_in_problem
+
+
 def dashboard1(request):
     title = 'Дашборд 1'
 
