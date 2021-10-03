@@ -19,10 +19,10 @@ Possible values are:
 # regex = re.compile('(?P<host>\S+)(\s*|\t)(?P<ip>\S+$)')
 regex = re.compile('(?P<host>^.+\s)(\s*|\t)(?P<ip>\d+.\d+.\d+.\d+)')
 
-# templateZabbixName = "Template OGK Infrastructure ICMP Ping"
-templateId = "11603"
-# groupZabbixName = "OGK Tetra infrastructure"
-groupid = "269"
+# templateZabbixName = "Template RIM Infrastructure ICMP Ping"
+templateId = "14353"
+# groupZabbixName = "RIM Tetra infrastructure"
+groupid = "271"
 
 result = {}
 
@@ -31,7 +31,7 @@ with open(os.path.join(sys.path[0], 'host_list.txt'), 'r') as file:
         match = regex.search(s)
         if match:
             result.update({match.group("host"): match.group("ip")})  # Словарь устройство:адрес
-print(result)
+# print(result)
 
 
 def addHost():
@@ -74,8 +74,8 @@ def addHost():
                 ],
                 tags =  [
                 {
-                    "tag": "location",
-                    "value": "OGK test"
+                    "tag": "infrastructure",
+                    "value": "BSHD"
                 }]
             )
             print(f'Хост:{hostname} был добавлен')

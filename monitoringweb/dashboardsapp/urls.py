@@ -3,6 +3,7 @@ from django.urls import path
 from django.urls.conf import include
 from dashboardsapp.views import dashboard1, dashboard2
 
+
 app_name = 'dashboardsapp'
 
 urlpatterns = [

@@ -2,6 +2,11 @@
 {% load static %}
 {% block content %}
 {% load timetags %}
+
+{% block js %}
+<script src="{% static 'monitoringweb/js/alerts_update.js' %}"></script>
+{% endblock js %}
+
 <!-- page content -->
 <div class="right_col" role="main">
 

@@ -2,6 +2,7 @@ from monitoringweb.scripts.zabbix_connection import zabbix_connect
 import os
 import sys
 
+
 def get_zabbix_trigger_in_problem_test():
     zapi = zabbix_connect()
     triggers = zapi.trigger.get(
@@ -42,8 +43,9 @@ def get_zabbix_trigger_in_problem():
         selectTriggers='extend',
         selectHosts=['name'],
         selectItems=['status'],
+        min_severity = 1,
         active=True,
-        maintenance = False,
+        maintenance=False,
         withLastEventUnacknowledged=True,
         skipDependent=True,
         expandComment=True,
@@ -62,45 +64,7 @@ def get_zabbix_trigger_in_problem():
     return filtering_trigger
 
 
-def get_zabbix_problem():
-    zapi = zabbix_connect()
-    problems = zapi.problem.get(
-        output='extend',
-        source=0,
-        object=0,
-        selectHosts=['name'],
-        selectAcknowledges=['extend'],
-        # filter= {'suppressed': '1'},
-        # sortfield='clock',
-        # sortorder='DESC',
-        # limit = 1,
-
-
-
-    )
-    return problems
-
-
-def get_zabbix_events():
-
-    # получение последних событий с триггера (или с любого объекта)
-    zapi = zabbix_connect()
-    events = zapi.event.get(
-        output='extend',
-        objectids='136533',  # ID триггера или объекта
-        select_acknowledges='extend',
-        selectTags='extend',
-        selectSuppressionData='extend',
-        sortfield=['clock', 'eventid'],
-        sortorder='DESC',
-    )
-    return events
-
-
 if __name__ == "__main__":
     sys.path.append("C:\PythonProjects\WebHelper\monitoringweb")
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "monitoringweb.settings")
-    # zabbix_connect()
     print(get_zabbix_trigger_in_problem_test())
-    # print(get_zabbix_events())
-    # print(get_zabbix_problem())
