@@ -1,0 +1,145 @@
+{% extends 'dashboardsapp/base.html' %}
+{% load static %}
+{% block content %}
+{% load timetags %}
+
+{% block js %}
+
+{% endblock js %}
+
+<!-- page content -->
+<div class="right_col" role="main">
+
+  <div class="row">
+    <div class="col-md-6 col-sm-6  ">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>Смена: {{ start_duty|print_timestamp }} - {{ end_duty|print_timestamp }}</h2>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i
+                  class="fa fa-wrench"></i></a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Settings 1</a>
+                <a class="dropdown-item" href="#">Settings 2</a>
+              </div>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+          <ul class="list-unstyled timeline">
+            {% for alert in alerts %}
+            <li>
+              <div class="block">
+                <div class="tags">
+                  <a href="" class="tag">
+                    <span>Запрос</span>
+                  </a>
+                </div>
+                <div class="block_content">
+                  <h2 class="title">
+                    <a>{{alert.hosts.0.name}}</a>
+                  </h2>
+                  <div class="byline">
+                    <span>{{ alert.lastEvent.clock|print_timestamp }}</span>
+                  </div>
+                  <p class="excerpt">Описание: {{alert.description}}
+                    <br>
+                    {% if alert.comments %}
+                    Комментарий: {{alert.comments}}
+                    {% endif %}
+
+                  </p>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+
+  <!-- <div class="row">
+    <div class="col-md-12 col-sm-12 ">
+      <div class="dashboard_graph">
+
+        <div class="row x_title">
+          <div class="col-md-6">
+            <h3>Network Activities <small>Graph title sub-title</small></h3>
+          </div>
+          <div class="col-md-6">
+            <div id="reportrange" class="pull-right"
+              style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+              <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+              <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-9 col-sm-9 ">
+          <div id="chart_plot_01" class="demo-placeholder"></div>
+        </div>
+        <div class="col-md-3 col-sm-3  bg-white">
+          <div class="x_title">
+            <h2>Top Campaign Performance</h2>
+            <div class="clearfix"></div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 ">
+            <div>
+              <p>Facebook Campaign</p>
+              <div class="">
+                <div class="progress progress_sm" style="width: 76%;">
+                  <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="80"></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p>Twitter Campaign</p>
+              <div class="">
+                <div class="progress progress_sm" style="width: 76%;">
+                  <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 ">
+            <div>
+              <p>Conventional Media</p>
+              <div class="">
+                <div class="progress progress_sm" style="width: 76%;">
+                  <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="40"></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p>Bill boards</p>
+              <div class="">
+                <div class="progress progress_sm" style="width: 76%;">
+                  <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="clearfix"></div>
+      </div>
+    </div>
+
+  </div> -->
+  <br />
+
+
+</div>
+<!-- /page content -->
+{% endblock content %}

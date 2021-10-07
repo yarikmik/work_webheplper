@@ -9,6 +9,7 @@ function update() {
         },
     });
 }
+
 let seconds = 60; // seconds, edit here
 
 setInterval('update()', seconds * 1000);

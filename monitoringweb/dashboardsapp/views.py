@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from monitoringweb.scripts.triggers import get_zabbix_trigger_in_problem
-
+from dashboardsapp.models import DutyTime
 
 def dashboard1(request):
     title = 'Дашборд 1'
@@ -22,3 +22,12 @@ def dashboard2(request):
     return render(request, 'dashboardsapp/dashboard1_copy.html', context)
 
 
+def channels(request):
+    title = 'Каналы'
+
+    context = {
+        'title': title,
+        'start_duty': DutyTime.start_duty,
+        'end_duty': DutyTime.end_duty
+    }
+    return render(request, 'dashboardsapp/Channels.html', context)
