@@ -38,13 +38,25 @@ def get_zabbix_trigger_in_problem_test():
 def get_zabbix_channels_in_period_test(t_from, t_till):
     zapi = zabbix_connect()
     channels = zapi.event.get(
-        output = ['name'],
-        # search = {'description': 'DOWN'},
-        hostids = ['12206'],
-        # time_from = t_from,
-        # time_till = t_till,
-        # filter={'value': 1, 'status': 0},
+        # objectids = ['59594'],
+        output=['name','value', 'clock', 'r_eventid', 'severity'],
+        source=0,  # только события от триггеров
+        # severities = ['1','2','3','4','5'],
+        search={'name': 'DOWN'},
+        hostids=['12206'],
+        time_from=t_from,
+        time_till=t_till,
+        # filter={'value': 1},
+        sortfield=['clock'],
+        sortorder='DESC',
     )
+    for channel in channels:
+        if channel['r_eventid'] == '0':
+            channel['r_clock'] = 'null'
+        else:
+            # добавляем к словарю время восстановления события
+            r_clock = zapi.event.get(eventids=channel['r_eventid'])[0]['clock']
+            channel['r_clock'] = r_clock
     return channels
 
 
@@ -53,7 +65,7 @@ def get_duty_period():
     now = now.replace(microsecond=0)
     print(now)
     print(now.hour)
-    if now.hour < 8 or now.hour > 20:
+    if now.hour < 8 or now.hour < 20:
         start_duty = now - timedelta(days=1, hours=now.hour,
                                      minutes=now.minute, seconds=now.second) + timedelta(hours=20)
         end_duty = now - timedelta(hours=now.hour,
@@ -73,13 +85,13 @@ def get_duty_period():
           ' timestamp=' + str(end_duty_ts))
 
 
-
 if __name__ == "__main__":
     from zabbix_connection import zabbix_connect
     # sys.path.append("C:\PythonProjects\WebHelper\monitoringweb")
     # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "monitoringweb.settings")
     # print(get_zabbix_trigger_in_problem_test())
     # print(get_zabbix_problems_in_period_test())
-    # get_duty_period()
-    print(get_zabbix_channels_in_period_test(1633568400,1633611600))
 
+    get_duty_period()
+    # print(get_channels_trigers())
+    print(get_zabbix_channels_in_period_test(1633957200,1634000400))

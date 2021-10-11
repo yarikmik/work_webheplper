@@ -8,6 +8,6 @@ def print_timestamp(timestamp):
         ts = float(timestamp)
     except ValueError:
         return None
-    return datetime.datetime.fromtimestamp(ts)
+    return datetime.datetime.fromtimestamp(ts).strftime('%Y.%m.%d %H:%M:%S')
 
 register.filter(print_timestamp)
