@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime, date, time, timedelta
 
 
+
 class DutyTime:
     now = datetime.today().replace(microsecond=0)
 
@@ -28,3 +29,6 @@ class DutyTime:
             end_duty = now.replace(hour=0, minute=0, second=0)  + timedelta(hours=20)
 
         return end_duty.timestamp()
+
+
+

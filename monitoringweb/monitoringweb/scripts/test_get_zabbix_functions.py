@@ -31,10 +31,11 @@ def get_duty_period():
           ' timestamp=' + str(end_duty_ts))
 
 
-
 """
 Блок тестовых функций для составления отчета по недоступным каналам связи за определенный период
 """
+
+
 def get_zabbix_trigger_in_problem_test():
     zapi = zabbix_connect()
     triggers = zapi.trigger.get(
@@ -73,14 +74,18 @@ def formatting_event_list(event_list, triggerid_pool):
         for event in event_list:
             # выводим в ключ id  триггера канала:
             if event['relatedObject']['triggerid'] == trigger:
+                r_clock = int(event['r_clock'] if event['r_clock'] != 'null' else datetime.today(
+                ).replace(microsecond=0).timestamp())
                 periods_list.append(
                     {'s_clock': event['clock'],  # в листе собираем список периодов недоступности
-                    'r_clock': event['r_clock'], })
+                    'r_clock': str(r_clock),
+                    'event_time': r_clock-int(event['clock'])})
                 new_event_list.update({trigger: {
                     # формируем новую структуру сводной информации по каналу
                     'name': event['name'],
                     'periods': periods_list,
-                    'value': event['relatedObject']['value']}})
+                    'value': event['relatedObject']['value'],
+                    'priority':event['relatedObject']['priority']}})
                 # value=0 - в данный момент канал в работе, 1-проблема, триггер активен
 
     return new_event_list
@@ -95,7 +100,6 @@ def get_r_clock_from_event(t_from, t_till, zapi, event):
             return event
 
 
-
 def get_zabbix_events_in_period_test(t_from, t_till):
     """
     проблема возникшая в заданном периоде и в нем же восстановленная, + время восстановления
@@ -103,10 +107,9 @@ def get_zabbix_events_in_period_test(t_from, t_till):
     zapi = zabbix_connect()
     events = zapi.event.get(
         # objectids = ['59594'],
-        output=['name', 'value', 'clock', 'r_eventid', 'severity'],
+        output=['name', 'value', 'clock', 'r_eventid'],
         source=0,  # только события от триггеров
-        # severities = ['1','2','3','4','5'],
-        selectRelatedObject=['triggerid', 'value'],
+        selectRelatedObject=['triggerid', 'value', 'priority'],
         search={'name': 'DOWN'},
         hostids=['12206'],
         time_from=t_from,
@@ -136,19 +139,17 @@ def get_zabbix_events_in_period_test(t_from, t_till):
     return new_event_list
 
 
-
 def get_zabbix_events_restored_in_peeriod(t_from, t_till):
     """
     события восстановления, для случаев, когда проблема началась до выбранного периода, но восстановилась в нем
     """
     zapi = zabbix_connect()
     events = zapi.event.get(
-        output=['name', 'value', 'clock', 'r_eventid', 'severity'],
+        output=['name', 'value', 'clock', 'r_eventid'],
         source=0,  # только события от триггеров
-        selectRelatedObject=['triggerid', 'value'],
+        selectRelatedObject=['triggerid', 'value', 'priority'],
         search={'name': 'DOWN'},
         hostids=['12206'],
-        r_eventid='extend',
         time_till=t_from,  # ищем события, которые были созданы до начала периода
         time_from=t_from - 5184000,  # ограничим 60 днями для сокращения выборки
         filter={'value': 1},  # только события в состоянии проблема
@@ -171,14 +172,58 @@ def get_zabbix_events_restored_in_peeriod(t_from, t_till):
         if event['relatedObject']['triggerid'] not in triggerid_pool:
             triggerid_pool.append(event['relatedObject']['triggerid'])
 
-    new_event_list = formatting_event_list(events_end_problem_in_period, triggerid_pool)
+    new_event_list = formatting_event_list(
+        events_end_problem_in_period, triggerid_pool)
 
     return new_event_list
 
 
 def get_zabbix_events_ongoing_in_peeriod(t_from, t_till):
+    
     '''проблема началась до выбранного периода и еще активна '''
-    pass
+    zapi = zabbix_connect()
+    triggers = zapi.trigger.get(
+        output = ['triggerid', 'description', 'lastchange'],
+        selectLastEvent = ['eventid'],
+        search={'description': 'DOWN'},
+        hostids=['12206'],
+        lastChangeTill=t_from, # возврат только тех триггеров, которые изменили свое состояние до начала периода
+        filter={'value': 1, 'status': 0},
+        sortfield='lastchange',
+        sortorder='DESC',
+    )
+
+    events = zapi.event.get(
+        eventids = [trigger['lastEvent']['eventid'] for trigger in triggers],
+        output=['name', 'value', 'clock', 'r_eventid'],
+        source=0,  # только события от триггеров
+        selectRelatedObject=['triggerid', 'value', 'priority'],
+        search={'name': 'DOWN'},
+        hostids=['12206'],
+        filter={'value': 1},  # только события в состоянии проблема
+        sortfield=['clock'],
+        sortorder='DESC',
+    )
+
+    triggerid_pool = []
+    for event in events:
+
+        # составляем список уникалььных triggerid от которых генерируются ивенты:
+        if event['relatedObject']['triggerid'] not in triggerid_pool:
+            triggerid_pool.append(event['relatedObject']['triggerid'])
+
+        # если времени восстоновления еще небыло, обозначаем его как null
+        if event['r_eventid'] == '0':
+            event['r_clock'] = 'null'
+        else:
+            # добавляем к словарю время восстановления события
+            r_clock = zapi.event.get(eventids=event['r_eventid'])[0]['clock']
+            event['r_clock'] = r_clock
+
+    new_event_list = formatting_event_list(events, triggerid_pool)
+    return new_event_list
+
+
 
 
 if __name__ == "__main__":
@@ -191,5 +236,8 @@ if __name__ == "__main__":
     get_duty_period()
     # print(get_events_trigers())
 
-    # print(get_zabbix_events_in_period_test(1633957200, 1634000400))
-    print(get_zabbix_events_restored_in_peeriod(1633950800, 1633950900))
+    print(get_zabbix_events_in_period_test(1634086800, 1634130000))
+    print('-*-*-*-*-*-')
+    print(get_zabbix_events_restored_in_peeriod(1634086800, 1634130000))
+    print('-*-*-*-*-*-')
+    print(get_zabbix_events_ongoing_in_peeriod(1634086800, 1634130000))
