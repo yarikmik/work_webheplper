@@ -2,15 +2,16 @@
 {% load static %}
 {% block content %}
 {% load timetags %}
+{% load seconds_to_time %}
 
 {% block js %}
-
+<script src="{% static 'monitoringweb/js/channels_update.js' %}"></script>
 {% endblock js %}
 
 <!-- page content -->
 <div class="right_col" role="main">
 
-  <div class="row">
+  <div class="row update_channels">
     <div class="col-md-6 col-sm-6  ">
       <div class="x_panel">
         <div class="x_title">
@@ -34,7 +35,7 @@
         </div>
         <div class="x_content">
           <ul class="list-unstyled timeline">
-            <h2>DOWN Channels</h2>
+            <h2>Каналы недоступны:</h2>
             {% for channel in channels_down %}
 
             <!-- {% if channel.name %} -->
@@ -50,10 +51,10 @@
                   <h2 class="title">
                     <a>{{channel.name}}</a>
                   </h2>
-                  <div class="byline">
-                    <span>Общее время недоступности:</span>
+                  <div class="excerpt">
+                    <span>Общее время недоступности: {{channel.down_time|print_seconds_to_time}}</span>
                   </div>
-                  <p class="excerpt">Периоды:<br>
+                  <p class="byline">Периоды:<br>
                     {% for period in channel.periods %}
                     С {{period.s_clock|print_timestamp}} по {{period.r_clock|print_timestamp}}, всего:
                     {{period.event_time}}
@@ -65,13 +66,98 @@
             </li>
             <!-- {% else %} -->
             <!-- <h2 class="title"><a>Все каналы доступны</a> -->
-              <!-- {% endif %} -->
-              {% endfor %}
+            <!-- {% endif %} -->
+            {% endfor %}
           </ul>
 
           <ul class="list-unstyled timeline">
-            <h2>UP Channels</h2>
+            <h2>Каналы были недоступны:</h2>
             {% for channel in channels_up %}
+            <li>
+              <div class="block">
+                <div class="tags">
+                  <a href="" class="tag">
+                    <span>Test</span>
+                  </a>
+                </div>
+                <div class="block_content">
+                  <h2 class="title">
+                    <a>{{channel.name}}</a>
+                  </h2>
+                  <div class="excerpt">
+                    <span>Общее время недоступности: {{channel.down_time|print_seconds_to_time}}</span>
+                  </div>
+                  <p class="byline">Периоды:<br>
+                    {% for period in channel.periods %}
+                    С {{period.s_clock|print_timestamp}} по {{period.r_clock|print_timestamp}}, всего:
+                    {{period.event_time}}
+                    {% endfor %}
+
+                  </p>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6  ">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>Неприоритетные каналы</h2>
+          <!-- <h3>timestamps={{ start_duty }},{{ end_duty }}</h3> -->
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i
+                  class="fa fa-wrench"></i></a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Settings 1</a>
+                <a class="dropdown-item" href="#">Settings 2</a>
+              </div>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close"></i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+          <ul class="list-unstyled timeline">
+            <h2>Каналы недоступны:</h2>
+            {% for channel in low_channels_down %}
+            <li>
+              <div class="block">
+                <div class="tags">
+                  <a href="" class="tag">
+                    <span>Test</span>
+                  </a>
+                </div>
+                <div class="block_content">
+                  <h2 class="title">
+                    <a>{{channel.name}}</a>
+                  </h2>
+                  <div class="excerpt">
+                    <span>Общее время недоступности: {{channel.down_time|print_seconds_to_time}}</span>
+                  </div>
+                  <p class="byline">Периоды:<br>
+                    {% for period in channel.periods %}
+                    С {{period.s_clock|print_timestamp}} по {{period.r_clock|print_timestamp}}, всего:
+                    {{period.event_time|print_seconds_to_time}}
+                    {% endfor %}
+
+                  </p>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <ul class="list-unstyled timeline">
+            <h2>Каналы были недоступны:</h2>
+            {% for channel in low_channels_up %}
             <li>
               <div class="block">
                 <div class="tags">
@@ -83,13 +169,13 @@
                   <h2 class="title">
                     <a>{{channel.name}}</a>
                   </h2>
-                  <div class="byline">
-                    <span>Общее время недоступности:</span>
+                  <div class="excerpt">
+                    <span>Общее время недоступности: {{channel.down_time|print_seconds_to_time}}</span>
                   </div>
-                  <p class="excerpt">Периоды:<br>
+                  <p class="byline">Периоды:<br>
                     {% for period in channel.periods %}
                     С {{period.s_clock|print_timestamp}} по {{period.r_clock|print_timestamp}}, всего:
-                    {{period.event_time}}
+                    {{period.event_time|print_seconds_to_time}}
                     {% endfor %}
 
                   </p>

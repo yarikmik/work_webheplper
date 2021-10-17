@@ -14,6 +14,7 @@ def formatting_event_list(event_list):
     new_event_list = {}
     for trigger in triggerid_pool:
         periods_list = []
+        down_time = 0 #  переменная для подстчета общего времени недоступности
         for event in event_list:
             # выводим в ключ id  триггера канала:
             if event['relatedObject']['triggerid'] == trigger:
@@ -23,10 +24,12 @@ def formatting_event_list(event_list):
                     {'s_clock': event['clock'],  # в листе собираем список периодов недоступности
                      'r_clock': str(r_clock),
                      'event_time': r_clock-int(event['clock'])})
+                down_time += r_clock-int(event['clock'])
                 new_event_list.update({trigger: {
                     # формируем новую структуру сводной информации по каналу
                     'name': event['name'],
                     'periods': periods_list,
+                    'down_time': down_time,
                     'value': event['relatedObject']['value'],
                     'priority': event['relatedObject']['priority']}})
                 # value=0 - в данный момент канал в работе, 1-проблема, триггер активен

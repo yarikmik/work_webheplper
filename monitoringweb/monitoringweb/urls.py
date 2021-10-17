@@ -22,4 +22,5 @@ from django.urls.conf import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('dashboardsapp.urls','dashboardsapp'), namespace='dashboards')),
+    path('channels/', include(('dashboardsapp.urls','dashboardsapp'), namespace='channels')),
 ]

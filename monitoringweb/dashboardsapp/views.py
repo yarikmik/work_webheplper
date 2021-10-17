@@ -26,12 +26,16 @@ def dashboard2(request):
 
 def channels(request):
     title = 'Каналы'
-    duty_time = ChannelsStatus(DutyTime.start_duty(), DutyTime.end_duty())
+
+    duty_time = DutyTime()
+    channels = ChannelsStatus(duty_time.start_duty(), duty_time.end_duty())
     context = {
         'title': title,
-        'start_duty': DutyTime.start_duty,
-        'end_duty': DutyTime.end_duty,
-        'channels_down': duty_time.channels_in_problem(),
-        'channels_up': duty_time.channels_was_in_problem(),
+        'start_duty': duty_time.start_duty(),
+        'end_duty': duty_time.end_duty(),
+        'channels_down': channels.channels_in_problem(),
+        'channels_up': channels.channels_was_in_problem(),
+        'low_channels_down':channels.channels_low_priority_in_problem(),
+        'low_channels_up':channels.channels_low_priority_was_in_problem(),
     }
     return render(request, 'dashboardsapp/Channels.html', context)
